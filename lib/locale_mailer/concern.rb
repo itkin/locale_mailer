@@ -31,9 +31,10 @@ module LocaleMailer
           options.symbolize_keys!
 
           i18n_path = [
+            Rails.configuration.locale_mailer_path_prefix,
             options[:template_path] || mailer_name,
             options[:template_name] || action_name
-          ].join('.')
+          ].compact.join('.')
 
           if I18n.exists? i18n_path, I18n.locale
             locale_options = instance_public_variables_to_hash

@@ -1,8 +1,10 @@
 # LocaleMailer
 
-Handling action mailer view templates can become a bit messy when your app has to send a lot of different emails
+Handling action mailer view templates can become a bit heavy when your app has to send a lot of different emails
     
-This gem aims at generating them from locale when no template view is found, saving you the pain (and the code duplication) to have to create and maintain template view files     
+This gem aims at generating email view templates straight from your localization files when no template view is found
+     
+This is especially relevant for email views with simple content
 
 ## Installation
 
@@ -22,18 +24,21 @@ Or install it yourself as:
 
 ## Usage
 
-Include `LocaleMailer::Concern` into your ApplicationMailer (or in any other mailer) to enable the plugin
+Include `LocaleMailer::Concern` is automatically mixed into ActionMailer::Base during initialization phase. 
 
-```ruby
-class ApplicationMailer < ActionMailer::Base
-  include LocaleMailer::Concern   
-  default from: "from@example.com"
-  layout 'mailer'
-end
+Considering the following localization file
+
+```yaml
+en:
+  my_mailer_class:
+    notify:
+      subject: "hello %{user_name}"
+      body:
+        - line 1
+        - line 2
+        - '<a href="%{user_link}">Click here</a>'
 ```
 
-Then create your mailer method as usual
- 
 ```ruby
 class MyMailer < ApplicationMailer
   def notify user
@@ -54,25 +59,14 @@ MyMailer.notify.text_part.decoded
 
 ```
 
-```yaml
-en:
-  my_mailer_class:
-    notify:
-      subject: "hello %{user_name}"
-      body:
-        - line 1
-        - line 2
-        - '<a href="%{user_link}">Click here</a>'
-```
-
-If no template view is found by ActionMailer::Base, LocaleMailer will check if there is some locales specified at 
+1 - If no template view is found by ActionMailer::Base, LocaleMailer will check if there is some locales specified at 
 `mailer_name`.`action_name` per default (or whatever template_path / template_name you passed to the `mail` method)
 
-Your instance variables (usually available to views) will be passed as to `I18n.translate`.
+2 - Your instance variables (usually available to views) will be passed to `I18n.translate`.
  
-If your locale returns an array it will be converted into <p> tags into the html_part
+3 - If your locale returns an array it will be converted in `<p>` tags into the html_part
 
-Links tags presents into the locale data will be converted to `text_content href_content`, other tags are stripped  
+4 - Link tags present into the locale data will be converted to `text_content href_content`, other tags will be stripped  
 
 
 ## Contributing
