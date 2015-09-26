@@ -1,9 +1,8 @@
 en:
-  mailers:
-    my_mailer_class:
-      method_without_view_template:
-        subject: "hellow %{name}"
-        body:
-          - line 1
-          - line 2
-          - '<a href="%{link}">Click here</a>'
+  my_mailer_class:
+    method_without_view_template:
+      subject: "hellow %{name}"
+      body:
+        - line 1
+        - line 2
+        - '<a href="%{link}">Click here</a>'

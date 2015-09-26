@@ -30,7 +30,7 @@ Considering the following localization file
 
 ```yaml
 en:
-  my_mailer_class:
+  my_mailer:
     notify:
       subject: "hello %{user_name}"
       body:

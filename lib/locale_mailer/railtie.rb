@@ -1,7 +1,7 @@
 module LocaleMailer
   class Railtie < Rails::Railtie
 
-    config.locale_mailer_path_prefix = :mailers
+    config.locale_mailer_path_prefix = nil
 
     initializer 'locale_mailer.actionview' do
       ActionView::Base.send :include, LocaleMailer::ActionViewHelpers
