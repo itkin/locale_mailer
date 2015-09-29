@@ -32,7 +32,7 @@ module LocaleMailer
 
           i18n_path = [
             Rails.configuration.locale_mailer_path_prefix,
-            options[:template_path] || mailer_name,
+            options[:template_path] || mailer_name.gsub('/','.').underscore,
             options[:template_name] || action_name
           ].compact.join('.')
 
