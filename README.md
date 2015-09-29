@@ -1,5 +1,7 @@
 # LocaleMailer
 
+[![Build Status](https://travis-ci.org/itkin/locale_mailer.svg)](https://travis-ci.org/itkin/locale_mailer)
+
 Handling action mailer view templates can become a bit heavy when your app has to send a lot of different emails
     
 This gem aims at generating email view templates straight from your localization files when no template view is found
