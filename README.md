@@ -62,13 +62,13 @@ MyMailer.notify.text_part.decoded
 ```
 
 1 - If no template view is found by ActionMailer::Base, LocaleMailer will check if there is some locales specified at 
-`mailer_name`.`action_name` per default (or whatever template_path / template_name you passed to the `mail` method)
+`mailer_name`.`action_name` per default (or whatever :template_path / :template_name options you passed to the `mail` method)
 
-2 - Your instance variables (usually available to views) will be passed to `I18n.translate`.
+2 - Your instance variables (usually available to views) will be passed to `I18n.translate` for locale interpolation.
  
 3 - If your locale returns an array it will be converted in `<p>` tags into the html_part
 
-4 - Link tags present into the locale data will be converted to `text_content href_content`, other tags will be stripped  
+4 - Link tags present into the locale data will be converted to `text_content href_content` into the text view part of the email, other tags will be stripped  
 
 
 ## Contributing
