@@ -58,8 +58,28 @@ module LocaleMailer
 
       def instance_public_variables_to_hash
         instance_variables.inject({}) do |memo, name|
-          memo[name.to_s.gsub(/\A@/,'').to_sym] = instance_variable_get(name) if name.to_s.match(/\A@(?!_).*/)
+          if name.to_s.match(/\A@(?!_).*/)
+            if instance_variable_get(name).try(:as_json).is_a? Hash
+              flatten_hash(instance_variable_get(name).as_json).inject(memo) do |memo, array|
+                memo["#{name.to_s.gsub(/\A@/,'')}_#{array[0]}".to_sym] = array[1]
+              end
+            else
+              memo[name.to_s.gsub(/\A@/,'').to_sym] = instance_variable_get(name)
+            end
+          end
           memo
+        end
+      end
+
+      def flatten_hash(hash)
+        hash.each_with_object({}) do |(k, v), h|
+          if v.is_a? Hash
+            flatten_hash(v).map do |h_k, h_v|
+              h["#{k}_#{h_k}".to_sym] = h_v
+            end
+          else
+            h[k] = v
+          end
         end
       end
 
