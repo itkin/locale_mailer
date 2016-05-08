@@ -30,17 +30,18 @@ module LocaleMailer
         rescue ActionView::MissingTemplate => e
           options.symbolize_keys!
 
-          i18n_path = [
-            Rails.configuration.locale_mailer_path_prefix,
-            options[:template_path] || mailer_name.gsub('/','.').underscore,
-            options[:template_name] || action_name
-          ].compact.join('.')
+          # i18n_path = [
+          #   Rails.configuration.locale_mailer_path_prefix,
+          #   options[:template_path] || mailer_name.gsub('/','.').underscore,
+          #   options[:template_name] || action_name
+          # ].compact.join('.')
 
-          if I18n.exists? i18n_path, I18n.locale
+
+          if I18n.exists? i18n_path(options), I18n.locale
             locale_options = instance_public_variables_to_hash
-            options[:subject] = subject_from_locale(i18n_path, locale_options) unless options.key?(:subject)
+            options[:subject] = subject_from_locale(i18n_path(options), locale_options) unless options.key?(:subject)
             mail_without_localized_templates options do |format|
-              html_body = body_from_locale i18n_path, locale_options, options
+              html_body = body_from_locale i18n_path(options), locale_options, options
               format.html {
                 html_body
               }
@@ -54,7 +55,13 @@ module LocaleMailer
         end
       end
 
-
+      def i18n_path options
+        [
+          Rails.configuration.locale_mailer_path_prefix,
+          options[:template_path] || mailer_name.gsub('/','.').underscore,
+          options[:template_name] || action_name
+        ].compact.join('.')
+      end
 
       def instance_public_variables_to_hash
         instance_variables.inject({}) do |memo, name|
