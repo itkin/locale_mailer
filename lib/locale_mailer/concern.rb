@@ -56,7 +56,7 @@ module LocaleMailer
       ].compact.join('.')
     end
 
-    def action_i18n_options
+    def action_i18n_options options = {}
       @action_i18n_options ||= instance_variables.inject({}) do |memo, name|
         if name.to_s.match(/\A@(?!_).*/) and not name.to_s.match(/\A@action_i18n_/)
           if instance_variable_get(name).try(:as_json).is_a? Hash
@@ -68,7 +68,7 @@ module LocaleMailer
           end
         end
         memo
-      end
+      end.update(scope: action_i18n_path(options))
     end
 
     def flatten_hash(hash)
@@ -84,12 +84,11 @@ module LocaleMailer
     end
 
     def subject_from_locale options
-      view_context.t([action_i18n_path(options), :subject].join('.'), action_i18n_options)
+      view_context.t 'subject', action_i18n_options(options)
     end
 
     def body_from_locale  options
-      render inline: view_context.text([action_i18n_path(options), :body].join('.'), action_i18n_options),
-         layout: options[:layout] || _layout
+      render inline: view_context.text('body', action_i18n_options(options)), layout: options[:layout] || _layout
     end
 
   end
