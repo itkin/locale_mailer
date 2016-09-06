@@ -26,25 +26,22 @@ module LocaleMailer
     private
 
     def mail_with_localized_templates(options = {}, &block)
-      begin
+      options.symbolize_keys!
+      if template_exists? action_name, mailer_name
         mail_without_localized_templates(options, &block)
-      rescue ActionView::MissingTemplate => e
-        options.symbolize_keys!
-
-        if I18n.exists? action_i18n_path(options), I18n.locale
-          options[:subject] = subject_from_locale(options) unless options.key?(:subject)
-          mail_without_localized_templates options do |format|
-            html_body = body_from_locale options
-            format.html {
-              html_body
-            }
-            format.text {
-              Loofah.scrub_fragment(html_body, LocaleMailer::A2HREF).to_text
-            }
-          end
-        else
-          raise e
+      elsif I18n.exists? action_i18n_path(options), I18n.locale
+        options[:subject] = subject_from_locale(options) unless options.key?(:subject)
+        mail_without_localized_templates options do |format|
+          html_body = body_from_locale options
+          format.html {
+            html_body
+          }
+          format.text {
+            Loofah.scrub_fragment(html_body, LocaleMailer::A2HREF).to_text
+          }
         end
+      else
+        raise "LocaleMailer : Missing template and locale #{I18n.locale}.#{action_i18n_path(options)}"
       end
     end
 
