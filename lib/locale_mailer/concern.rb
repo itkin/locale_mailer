@@ -27,7 +27,7 @@ module LocaleMailer
 
     def mail_with_localized_templates(options = {}, &block)
       options.symbolize_keys!
-      if template_exists? action_name, mailer_name
+      if template_exists? options[:template_name] || action_name, options[:template_path] || mailer_name
         mail_without_localized_templates(options, &block)
       elsif I18n.exists? action_i18n_path(options), I18n.locale
         options[:subject] = subject_from_locale(options) unless options.key?(:subject)
