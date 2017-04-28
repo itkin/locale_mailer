@@ -80,11 +80,11 @@ module LocaleMailer
       end
     end
 
-    def subject_from_locale options
+    def subject_from_locale options = {}
       view_context.t 'subject', action_i18n_options(options)
     end
 
-    def body_from_locale  options
+    def body_from_locale  options = {}
       render inline: view_context.text('body', action_i18n_options(options)), layout: options[:layout] || _layout
     end
 
