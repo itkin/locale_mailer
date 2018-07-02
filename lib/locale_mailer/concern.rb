@@ -18,7 +18,8 @@ module LocaleMailer
     extend ActiveSupport::Concern
 
     included do
-      alias_method_chain :mail, :localized_templates
+      alias_method :mail_without_localized_templates, :mail
+      alias_method :mail, :mail_with_localized_templates
       private :mail, :mail_with_localized_templates, :mail_without_localized_templates
       helper_method :action_i18n_options, :action_i18n_path
     end
