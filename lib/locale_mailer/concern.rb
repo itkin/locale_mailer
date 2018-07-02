@@ -33,12 +33,11 @@ module LocaleMailer
       elsif I18n.exists? action_i18n_path(options), I18n.locale
         options[:subject] = subject_from_locale(options) unless options.key?(:subject)
         mail_without_localized_templates options do |format|
-          html_body = body_from_locale options
           format.html {
-            html_body
+            body_from_locale options.reverse_merge(layout: _layout(:html))
           }
           format.text {
-            Loofah.scrub_fragment(html_body, LocaleMailer::A2HREF).to_text
+            Loofah.scrub_fragment(body_from_locale(options.reverse_merge(layout: _layout(:text))), LocaleMailer::A2HREF).to_text
           }
         end
       else
