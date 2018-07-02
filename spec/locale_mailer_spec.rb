@@ -43,7 +43,7 @@ describe LocaleMailer do
     it "raises ActionView::MissingTemplate error" do
       expect{
         email.text_part.decoded
-      }.to raise_error(ActionView::MissingTemplate)
+      }.to raise_error(RuntimeError)
     end
   end
 end
