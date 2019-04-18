@@ -9,3 +9,5 @@
 /tmp/
 .idea/
 spec/internal/
+.ruby-gemset
+.ruby-version

@@ -1,0 +1,1 @@
+0.3.0 : Bump to action mailer 5.2.0 and use locale file to display a subject per default

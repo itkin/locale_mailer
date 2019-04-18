@@ -28,10 +28,12 @@ module LocaleMailer
 
     def mail_with_localized_templates(options = {}, &block)
       options.symbolize_keys!
+
+      options[:subject] ||= subject_from_locale(options)
+
       if template_exists? options[:template_name] || action_name, options[:template_path] || mailer_name
         mail_without_localized_templates(options, &block)
       elsif I18n.exists? action_i18n_path(options), I18n.locale
-        options[:subject] = subject_from_locale(options) unless options.key?(:subject)
         mail_without_localized_templates options do |format|
           format.html {
             body_from_locale options.reverse_merge(layout: _layout(:html))
@@ -85,7 +87,7 @@ module LocaleMailer
     end
 
     def body_from_locale  options = {}
-      render inline: view_context.text('body', action_i18n_options(options)), layout: options[:layout] || _layout
+      render inline: view_context.text('body', action_i18n_options(options)), layout: options[:layout] 
     end
 
   end

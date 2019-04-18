@@ -7,6 +7,7 @@ class MyObject
 end
 class MyMailerClass < ActionMailer::Base
   include LocaleMailer::Concern
+  layout false
   default :to => 'toto@gmail.com', :from => "titi@gmail.com"
 
   def method_without_view_template
